@@ -67,6 +67,7 @@ func NewRequest(method Method, URL *url.URL, header Header)(req *Request){
 	return &Request{
 		Method: method,
 		URL: URL,
+		Proto: DefaultProto,
 		Header: header,
 		Host: header.Get("Host"),
 		ContentLength: -1,
@@ -92,11 +93,8 @@ func (req *Request)WriteTo(w io.Writer)(err error){
 	if req.Method == "" {
 		req.Method = MethodGet
 	}
-	_, err = io.WriteString(w, req.Method)
-	if err != nil { return }
-	_, err = w.Write(space)
-	if err != nil { return }
-	_, err = io.WriteString(w, req.URL.EscapedPath())
+
+	_, err = io.WriteString(w, req.Method + " " + req.URL.EscapedPath() + " " + req.Proto.String())
 	if err != nil { return }
 	_, err = w.Write(crlf)
 	if err != nil { return }
