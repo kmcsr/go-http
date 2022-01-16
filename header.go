@@ -131,6 +131,11 @@ func (r *wrapReader)ReadLine()(buf []byte, err error){
 			return
 		}
 		n++
+		if n >= len(buf) {
+			bf := buf
+			buf = make([]byte, n * 4 / 3)
+			copy(buf, bf)
+		}
 	}
 }
 
